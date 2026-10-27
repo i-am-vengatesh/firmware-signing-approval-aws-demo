@@ -2,12 +2,15 @@
 set -euo pipefail
 
 ARTIFACT_DIR="build-artifacts"
-ARTIFACT="$ARTIFACT_DIR/firmware-build-info.txt"
-CHECKSUM="$ARTIFACT_DIR/firmware-build-info.sha256"
+ARTIFACT_NAME="firmware-build-info.txt"
+CHECKSUM_NAME="firmware-build-info.sha256"
 
 mkdir -p "$ARTIFACT_DIR"
 
-echo "Step 1: Creating a demo-only firmware build-info artifact..."
+ARTIFACT="$ARTIFACT_DIR/$ARTIFACT_NAME"
+CHECKSUM="$ARTIFACT_DIR/$CHECKSUM_NAME"
+
+echo "Step 1: Creating demo-only build information..."
 cat > "$ARTIFACT" <<'ARTIFACT_EOF'
 Project: FirmwareSigningDemo
 Firmware-Version: 1.0.0
@@ -17,12 +20,15 @@ Approval-Status: PENDING
 ARTIFACT_EOF
 
 echo "Step 2: Generating SHA-256 checksum..."
-sha256sum "$ARTIFACT" > "$CHECKSUM"
-cat "$CHECKSUM"
+(
+    cd "$ARTIFACT_DIR"
+    sha256sum "$ARTIFACT_NAME" > "$CHECKSUM_NAME"
+)
 
-echo
-echo "Step 3: Verifying artifact against its checksum..."
-sha256sum --check "$CHECKSUM"
+echo "Step 3: Verifying original artifact..."
+(
+    cd "$ARTIFACT_DIR"
+    sha256sum --check "$CHECKSUM_NAME"
+)
 
-echo
-echo "PASS: Demo artifact integrity verification succeeded."
+echo "PASS: Original artifact integrity verification succeeded."

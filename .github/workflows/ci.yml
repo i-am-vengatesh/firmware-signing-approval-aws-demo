@@ -10,12 +10,8 @@ permissions:
   contents: read
 
 jobs:
-  security-tests-build:
+  verify-artifact:
     runs-on: ubuntu-24.04
-
-    permissions:
-      contents: read
-      packages: write
 
     steps:
       - name: Checkout source code
@@ -41,8 +37,39 @@ jobs:
       - name: Run automated tests
         run: python -m pytest -v
 
-      - name: Verify demo artifact SHA-256
+      - name: Generate and verify demo artifact
         run: bash scripts/verify_ci_artifact.sh
+
+      - name: Upload demo artifact and checksum
+        uses: actions/upload-artifact@v6
+        with:
+          name: firmware-demo-artifact
+          path: build-artifacts/
+          if-no-files-found: error
+          retention-days: 7
+
+  build-and-publish:
+    needs: verify-artifact
+    runs-on: ubuntu-24.04
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v7
+
+      - name: Download demo artifact
+        uses: actions/download-artifact@v6
+        with:
+          name: firmware-demo-artifact
+          path: build-artifacts
+
+      - name: Verify downloaded artifact checksum
+        run: |
+          cd build-artifacts
+          sha256sum --check firmware-build-info.sha256
 
       - name: Build Docker image
         run: |
