@@ -41,6 +41,9 @@ jobs:
       - name: Run automated tests
         run: python -m pytest -v
 
+      - name: Verify demo artifact SHA-256
+        run: bash scripts/verify_ci_artifact.sh
+
       - name: Build Docker image
         run: |
           docker build \
