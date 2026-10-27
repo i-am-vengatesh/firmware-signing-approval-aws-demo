@@ -1,0 +1,68 @@
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    background: #f3f6fb;
+    color: #1f2937;
+    font-family: Arial, sans-serif;
+    line-height: 1.5;
+}
+
+.container {
+    max-width: 900px;
+    margin: 35px auto;
+    padding: 0 18px;
+}
+
+h1 { color: #123b68; }
+.subtitle, .note { color: #5b6573; }
+
+.panel {
+    background: white;
+    padding: 22px;
+    margin: 20px 0;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px #0000000d;
+}
+
+label {
+    display: block;
+    margin: 14px 0;
+    font-weight: bold;
+}
+
+input, select {
+    display: block;
+    width: 100%;
+    margin-top: 6px;
+    padding: 11px;
+    border: 1px solid #cbd5e1;
+    border-radius: 5px;
+    font: inherit;
+}
+
+button {
+    padding: 11px 16px;
+    border: 0;
+    border-radius: 5px;
+    background: #155eab;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button.reject { background: #b42318; }
+.actions { display: flex; gap: 10px; }
+.message {
+    padding: 12px;
+    background: #e0f2fe;
+    border-radius: 5px;
+}
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+th, td {
+    text-align: left;
+    padding: 10px;
+    border-bottom: 1px solid #e5e7eb;
+}
+a { color: #155eab; }

@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Approver Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<main class="container">
+    <h1>Approver Dashboard</h1>
+    <p><a href="{{ url_for('index') }}">← Back to Request Form</a></p>
+
+    {% with messages = get_flashed_messages() %}
+      {% for message in messages %}
+        <p class="message">{{ message }}</p>
+      {% endfor %}
+    {% endwith %}
+
+    {% if requests %}
+        {% for item in requests %}
+        <section class="panel">
+            <h2>{{ item.project_name }} — {{ item.firmware_version }}</h2>
+            <p><strong>Request ID:</strong> {{ item.id }}</p>
+            <p><strong>Branch:</strong> {{ item.git_branch }}</p>
+            <p><strong>Commit:</strong> {{ item.commit_id }}</p>
+            <p><strong>Platform:</strong> {{ item.platform }}</p>
+            <p><strong>Signing Profile:</strong> {{ item.signing_profile }}</p>
+            <p><strong>Status:</strong> {{ item.status }}</p>
+            {% if item.status == "PENDING_APPROVAL" %}
+            <div class="actions">
+                <form method="post" action="{{ url_for('decide', request_id=item.id, decision='approve') }}">
+                    <button type="submit">Approve</button>
+                </form>
+                <form method="post" action="{{ url_for('decide', request_id=item.id, decision='reject') }}">
+                    <button class="reject" type="submit">Reject</button>
+                </form>
+            </div>
+            {% endif %}
+        </section>
+        {% endfor %}
+    {% else %}
+        <section class="panel"><p>No requests are waiting for review.</p></section>
+    {% endif %}
+    <p class="note">Demo approval only. Authentication and role-based access will be added later.</p>
+</main>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Firmware Signing Approval</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<main class="container">
+    <h1>Firmware Signing Approval</h1>
+    <p class="subtitle">Submit a firmware build request for approval.</p>
+
+    {% with messages = get_flashed_messages() %}
+      {% for message in messages %}
+        <p class="message">{{ message }}</p>
+      {% endfor %}
+    {% endwith %}
+
+    <section class="panel">
+        <h2>New Request</h2>
+        <form method="post">
+            <label>Project Name
+                <input name="project_name" required placeholder="Example: Gateway Firmware">
+            </label>
+            <label>Firmware Version
+                <input name="firmware_version" required placeholder="1.0.0">
+            </label>
+            <label>Git Branch
+                <input name="git_branch" required placeholder="release/1.0">
+            </label>
+            <label>Commit ID
+                <input name="commit_id" required placeholder="Git commit SHA">
+            </label>
+            <label>Target Platform
+                <select name="platform" required>
+                    <option value="">Select platform</option>
+                    <option>Embedded Linux</option>
+                    <option>Yocto</option>
+                    <option>RTOS</option>
+                    <option>U-Boot</option>
+                </select>
+            </label>
+            <label>Signing Profile
+                <select name="signing_profile" required>
+                    <option value="">Select profile</option>
+                    <option>Development</option>
+                    <option>QA</option>
+                    <option>Release</option>
+                </select>
+            </label>
+            <button type="submit">Submit for Approval</button>
+        </form>
+    </section>
+
+    <p><a href="{{ url_for('approver') }}">Open Approver Dashboard →</a></p>
+
+    <section class="panel">
+        <h2>Submitted Requests</h2>
+        {% if requests %}
+        <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th>ID</th><th>Project</th><th>Version</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+            {% for item in requests %}
+                <tr>
+                    <td>{{ item.id }}</td>
+                    <td>{{ item.project_name }}</td>
+                    <td>{{ item.firmware_version }}</td>
+                    <td>{{ item.status }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        </div>
+        {% else %}
+        <p>No requests submitted yet.</p>
+        {% endif %}
+    </section>
+    <p class="note">Learning demo only. No real firmware signing takes place.</p>
+</main>
+</body>
+</html>

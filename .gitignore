@@ -1,0 +1,14 @@
+.venv/
+__pycache__/
+.pytest_cache/
+*.py[cod]
+firmware.db
+*.db
+.env
+.env.*
+!.env.example
+downloaded.txt
+verification.txt
+floci-data/
+.coverage
+htmlcov/
