@@ -39,3 +39,13 @@ jobs:
 
       - name: Build Docker image
         run: docker build -t firmware-signing-approval:ci .
+
+      - name: Scan Docker image with Trivy
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: firmware-signing-approval:ci
+          format: table
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: os,library
+          severity: HIGH,CRITICAL
