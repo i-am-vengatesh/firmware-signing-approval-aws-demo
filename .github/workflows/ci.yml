@@ -40,7 +40,17 @@ jobs:
       - name: Build Docker image
         run: docker build -t firmware-signing-approval:ci .
 
-      - name: Scan Docker image with Trivy
+      - name: Generate Trivy JSON security report
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: firmware-signing-approval:ci
+          format: json
+          output: trivy-report.json
+          exit-code: '0'
+          vuln-type: os,library
+          severity: HIGH,CRITICAL
+
+      - name: Enforce Trivy security threshold
         uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: firmware-signing-approval:ci
@@ -49,3 +59,12 @@ jobs:
           ignore-unfixed: true
           vuln-type: os,library
           severity: HIGH,CRITICAL
+
+      - name: Upload Trivy security report
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: trivy-security-report
+          path: trivy-report.json
+          if-no-files-found: warn
+          retention-days: 30
