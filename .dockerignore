@@ -1,0 +1,8 @@
+.venv/
+__pycache__/
+.pytest_cache/
+.git/
+*.pyc
+downloaded.txt
+verification.txt
+floci-data/
